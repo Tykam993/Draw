@@ -18,6 +18,11 @@ public class movement : MonoBehaviour {
 	void Start () {
 		
 	}
+
+	void reset_position() {
+		transform.position = new Vector3 (0, transform.position.y, transform.position.z);
+	}
+
     void walk(string dir)
 	{
         if (direction == "left")
@@ -45,8 +50,9 @@ public class movement : MonoBehaviour {
 			walk (direction);
 		}
 		if (Input.GetKeyDown (key)) {
-			fire_weapon ();
-			Debug.Log("YO");
+			if (time_expired) {
+				fire_weapon ();
+			}
 		}
 	}
 }
