@@ -4,13 +4,14 @@ using UnityEngine;
 
 public class movement : MonoBehaviour {
 
-    [SerializeField]
-    private string direction;
-
+	// Game Object that handles time and scoring
 	public GameObject time_keeper;
+	// Is the walk phase over
 	private bool time_expired;
 	[SerializeField]
+	// Which player is this?
 	private int player_number;
+	// What key does this player use to fire
 	[SerializeField]
 	private string key;
 
@@ -19,25 +20,24 @@ public class movement : MonoBehaviour {
 		
 	}
 
-	void reset_position() {
-		transform.position = new Vector3 (0, transform.position.y, transform.position.z);
-	}
-
-    void walk(string dir)
+	// Move the players in the right directions
+    void walk()
 	{
-        if (direction == "left")
+		if (player_number == 0)
         {   
             Vector3 left = new Vector3(-.05f, 0, 0);
             transform.position += left;
         }
-
-        if (direction == "right")
+		if (player_number == 1)
         {
             Vector3 right = new Vector3(.05f, 0, 0);
             transform.position += right;
         }
     }
 
+	// Shoot at the other player
+	// Sends the player number to the time keeper.  This let's the time keeper know which
+	// player shot first
 	void fire_weapon() {
 			time_keeper.GetComponent<time> ().shots.Add (player_number);
 
@@ -45,9 +45,11 @@ public class movement : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
+		bool game_over = time_keeper.GetComponent<time> ().game_over;
 		time_expired = time_keeper.GetComponent<time>().expired;
-		if (!time_expired) {
-			walk (direction);
+		// Walk until the duel starts
+		if (!time_expired &&  !game_over) {
+			walk ();
 		}
 		if (Input.GetKeyDown (key)) {
 			if (time_expired) {
